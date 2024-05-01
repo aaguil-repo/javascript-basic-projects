@@ -72,3 +72,77 @@ const menu = [
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
 ];
+
+const sectionCenter = document.querySelector('.section-center');
+const container = document.querySelector('.btn-container');
+
+// load items
+window.addEventListener('DOMContentLoaded', function()
+{
+  displayMenuItems(menu);
+  displayMenuButtons();
+});
+
+
+function displayMenuItems(menuItems)
+{
+  let displayMenu = menuItems.map(function(menuItem)
+  {
+    // console.log(menuItem);
+    return `<article class="menu-item">
+              <img src=${menuItem.img} class="photo" alt=${menuItem.title}>
+              <div class="item-info">
+                <header>
+                  <h4>${menuItem.title}</h4>
+                  <h4 class="price">${menuItem.price}</h4>  
+                </header>
+                <p class="item-text">${menuItem.desc}</p>
+              </div>
+            </article>`;
+  });
+  displayMenu = displayMenu.join("");
+  sectionCenter.innerHTML = displayMenu;
+}
+
+function displayMenuButtons()
+{
+  const categories = menu.reduce(function(values, item)
+  {
+    if(!values.includes(item.category))
+    {
+      values.push(item.category);
+    }
+    return values;
+  },['all'])
+  const categoryBtns = categories.map(function(category)
+  {
+    return `<button class="filter-btn" type="button" data-id=${category}>${category}</button>`
+  }).join("");
+  container.innerHTML = categoryBtns;
+  const filterBtns = document.querySelectorAll('.filter-btn');
+
+  // filter items
+  filterBtns.forEach(function(btn)
+  {
+    btn.addEventListener('click', function(e)
+    {
+      const category = e.currentTarget.dataset.id;
+      const menuCategory = menu.filter(function(menuItem)
+      {
+        if(menuItem.category === category)
+        {
+          return menuItem;
+        }
+      });
+
+      if(category === 'all')
+      {
+        displayMenuItems(menu);
+      }
+      else
+      {
+        displayMenuItems(menuCategory);
+      }
+    });
+  });
+}
